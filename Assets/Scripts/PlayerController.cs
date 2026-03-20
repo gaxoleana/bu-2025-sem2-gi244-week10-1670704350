@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,6 +21,8 @@ public class PlayerController : MonoBehaviour
 
     public bool gameOver = false;
 
+    private int healthPoint;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -35,6 +38,8 @@ public class PlayerController : MonoBehaviour
         jumpAction = InputSystem.actions.FindAction("Jump");
 
         gameOver = false;
+
+        healthPoint = 3;
     }
 
     // Update is called once per frame
@@ -59,6 +64,24 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
         {
+            healthPoint -= 1;
+            Debug.Log(healthPoint);
+            Debug.Log("Hit obstacle!");
+            explosionParticle.Play();
+            dirtParticle.Stop();
+            playerAudio.PlayOneShot(crashSfx);
+            Destroy(collision.gameObject);
+            if (healthPoint <= 0)
+            {
+                Debug.Log("Game Over!");
+                gameOver = true;
+                playerAnim.SetBool("Death_b", true);
+                playerAnim.SetInteger("DeathType_int", 1);
+            }
+        }
+        /*
+        else if (collision.gameObject.CompareTag("Obstacle") && healthPoint <= 0)
+        {
             Debug.Log("Game Over!");
             gameOver = true;
             playerAnim.SetBool("Death_b", true);
@@ -67,6 +90,7 @@ public class PlayerController : MonoBehaviour
             dirtParticle.Stop();
             playerAudio.PlayOneShot(crashSfx);
         }
+        */
     }
 
 }
