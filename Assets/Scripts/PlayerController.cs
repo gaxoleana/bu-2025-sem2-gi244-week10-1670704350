@@ -68,6 +68,11 @@ public class PlayerController : MonoBehaviour
                 playerAudio.PlayOneShot(jumpSfx);
             }
         }
+
+        if (shiftAction.triggered)
+        {
+            moveLeft.speed = 20;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)

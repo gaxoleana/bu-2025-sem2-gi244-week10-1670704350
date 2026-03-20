@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MoveLeft : MonoBehaviour
@@ -11,6 +12,7 @@ public class MoveLeft : MonoBehaviour
     void Start()
     {
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        
     }
 
     // Update is called once per frame
@@ -25,5 +27,6 @@ public class MoveLeft : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
     }
 }
