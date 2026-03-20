@@ -11,10 +11,12 @@ public class PlayerController : MonoBehaviour
 
     public AudioClip jumpSfx;
     public AudioClip crashSfx;
-
+  
     private Rigidbody rb;
     private InputAction jumpAction;
+    private InputAction shiftAction;
     private bool isOnGround = true;
+    private bool doubleJump;
 
     private Animator playerAnim;
     private AudioSource playerAudio;
@@ -22,6 +24,7 @@ public class PlayerController : MonoBehaviour
     public bool gameOver = false;
 
     private int healthPoint;
+    private MoveLeft moveLeft;
 
     void Awake()
     {
@@ -36,6 +39,7 @@ public class PlayerController : MonoBehaviour
         Physics.gravity *= gravityModifier;
 
         jumpAction = InputSystem.actions.FindAction("Jump");
+        shiftAction = InputSystem.actions.FindAction("Sprint");
 
         gameOver = false;
 
@@ -45,13 +49,24 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (jumpAction.triggered && isOnGround && !gameOver)
+        if (jumpAction.triggered && !gameOver)
         {
-            rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
-            isOnGround = false;
-            playerAnim.SetTrigger("Jump_trig");
-            dirtParticle.Stop();
-            playerAudio.PlayOneShot(jumpSfx);
+            if (isOnGround)
+            {
+                rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+                isOnGround = false;
+                doubleJump = true;
+                playerAnim.SetTrigger("Jump_trig");
+                dirtParticle.Stop();
+                playerAudio.PlayOneShot(jumpSfx);
+            }
+            else if (doubleJump)
+            {
+                rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+                doubleJump = false;
+                playerAnim.SetTrigger("Jump_trig");
+                playerAudio.PlayOneShot(jumpSfx);
+            }
         }
     }
 
